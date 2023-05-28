@@ -17,7 +17,7 @@
 
 
 import logging, argparse
-from nrf24 import *
+from . import nrf24
 
 channels = []
 args = None
@@ -55,6 +55,6 @@ def parse_and_init():
   logging.debug('Using channels {0}'.format(', '.join(str(c) for c in channels)))
 
   # Initialize the radio
-  radio = nrf24(args.index)
+  radio = nrf24.nrf24(args.index)
   if args.lna: radio.enable_lna()
 

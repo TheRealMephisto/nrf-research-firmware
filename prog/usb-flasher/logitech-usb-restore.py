@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 '''
   Copyright (C) 2016 Bastille Networks
 
@@ -16,12 +16,13 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import binascii
 from unifying import *
 import subprocess
 
 # Make sure a firmware image path was passed in
 if len(sys.argv) < 3:
-  print "Usage: sudo ./logitech-usb-flash.py [firmware-image.hex]"
+  print("Usage: sudo ./logitech-usb-flash.py [firmware-image.hex]")
 
 # Read in the firmware image
 with open(sys.argv[1]) as f:
@@ -29,7 +30,7 @@ with open(sys.argv[1]) as f:
   lines = [line.strip()[1:] for line in lines]
   lines = [line[2:6] + line[0:2] + line[8:-2] for line in lines]
   lines = ["20" + line + "0"*(62-len(line)) for line in lines]
-  payloads = [line.decode('hex') for line in lines]
+  payloads = [binascii.unhexlify(line) for line in lines]
   payloads[0] = payloads[0][0:2] + chr((ord(payloads[0][2]) + 1)) + chr((ord(payloads[0][3]) - 1)) + payloads[0][5:]
 
 # Instantiate the dongle

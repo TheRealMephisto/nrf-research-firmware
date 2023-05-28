@@ -30,7 +30,7 @@ spi_install:
 	./prog/teensy-flasher/python/spi-flash.py bin/dongle.bin
 
 logitech_install:
-	./prog/usb-flasher/logitech-usb-flash.py bin/dongle.formatted.bin bin/dongle.formatted.ihx
+	python ./prog/usb-flasher/logitech-usb-flash.py bin/dongle.formatted.bin bin/dongle.formatted.ihx
 
 bin/:
 	mkdir -p bin

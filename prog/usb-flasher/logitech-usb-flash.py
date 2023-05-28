@@ -2,6 +2,8 @@
 
 from unifying import *
 
+import binascii
+
 # Compute CRC-CCITT over 1 byte
 def crc_update(crc, data):
   crc ^= (data << 8)
@@ -22,7 +24,7 @@ with open(path, 'rb') as f:
   data = f.read()
 crc = 0xFFFF
 for x in range(len(data)):
-  crc = crc_update(crc, ord(data[x]))
+  crc = crc_update(crc, data[x])
 
 # Read in the firmware hex file
 logging.info("Preparing USB payloads")
@@ -32,12 +34,11 @@ with open(path) as f:
   lines = [line.strip()[1:] for line in lines]
   lines = [line[2:6] + line[0:2] + line[8:-2] for line in lines]
   lines = ["20" + line + "0"*(62-len(line)) for line in lines]
-  payloads = [line.decode('hex') for line in lines]
+  payloads = [binascii.unhexlify(line) for line in lines]
   payloads[0] = payloads[0][0:2] + chr((ord(payloads[0][2]) + 1)) + chr((ord(payloads[0][3]) - 1)) + payloads[0][5:]
 
 # Add the firmware CRC
 payloads.append('\x20\x67\xFE\x02' + struct.pack('!H', crc) + '\x00'*26)
-
 # Instantiate the dongle
 dongle = unifying_dongle()
 
